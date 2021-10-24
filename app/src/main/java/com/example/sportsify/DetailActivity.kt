@@ -3,6 +3,8 @@ package com.example.sportsify
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import kotlinx.android.synthetic.main.activity_detail.*
 
 
@@ -15,9 +17,10 @@ class DetailActivity : AppCompatActivity() {
         val intent = intent
         if (intent.getIntExtra("position", 0) == 0) {
             Glide.with(this)
-                .asGif()
                 .load(intent.getStringExtra("gifUrl"))
-                .into(selectedImage);
+                .signature(ObjectKey(System.currentTimeMillis()))
+                .into(selectedImage)
+
         } else {
             selectedImage.setImageResource(intent.getIntExtra("image", 0))
         }

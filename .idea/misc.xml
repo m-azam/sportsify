@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/mazam/AndroidStudioProjects/sportsify/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/mazam/AndroidStudioProjects/sportsify/app/src/main/res/drawable/loading.xml" value="0.2703125" />
         <entry key="..\:/Users/mazam/AndroidStudioProjects/sportsify/app/src/main/res/drawable/one.xml" value="0.2703125" />
         <entry key="..\:/Users/mazam/AndroidStudioProjects/sportsify/app/src/main/res/layout/activity_collection.xml" value="0.14356884057971014" />
         <entry key="..\:/Users/mazam/AndroidStudioProjects/sportsify/app/src/main/res/layout/activity_detail.xml" value="0.21014492753623187" />

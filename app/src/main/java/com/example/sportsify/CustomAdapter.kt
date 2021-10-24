@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 
 
@@ -34,7 +35,7 @@ class CustomAdapter(applicationContext: Context, logos: IntArray, picUrl: String
             view1.findViewById(R.id.icon) as ImageView // get the reference of ImageView
         icon.setImageResource(logos[i]) // set logo images
         if (i == 0) {
-            Picasso.get().load(picUrl).into(icon)
+            Picasso.get().load(picUrl).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(icon)
         }
         return view1
     }
