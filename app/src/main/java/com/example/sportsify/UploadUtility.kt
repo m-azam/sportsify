@@ -12,8 +12,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
-
-
+import org.json.JSONObject
+import java.io.IOException
 
 
 class UploadUtility(activity: Activity) {
@@ -24,25 +24,19 @@ class UploadUtility(activity: Activity) {
     var serverUploadDirectoryPath: String = "http://172.18.192.86:8000/uploadfile"
     val client : OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(45, TimeUnit.SECONDS)
+        .callTimeout(45, TimeUnit.SECONDS)
+        .readTimeout(45, TimeUnit.SECONDS)
+        .writeTimeout(45, TimeUnit.SECONDS)
         .build()
 
-    fun uploadFile(sourceFilePath: String, uploadedFileName: String? = null) {
-        uploadFile(File(sourceFilePath), uploadedFileName)
-    }
-
-    fun uploadFile(sourceFileUri: Uri, uploadedFileName: String? = null) {
-        val pathFromUri = URIPathHelper().getPath(activity,sourceFileUri)
-        uploadFile(File(pathFromUri), uploadedFileName)
-    }
-
-    fun uploadFile(sourceFile: File, uploadedFileName: String? = null) {
+    fun uploadFile(sourceFile: File, callback: (JSONObject) -> Unit) {
         Thread {
             val mimeType = "video/mp4"
             if (mimeType == null) {
                 Log.e("file error", "Not able to get mime type")
                 return@Thread
             }
-            val fileName: String = if (uploadedFileName == null)  sourceFile.name else uploadedFileName
+            val fileName: String = sourceFile.name
             toggleProgressDialog(true)
             try {
                 val requestBody: RequestBody =
@@ -52,22 +46,37 @@ class UploadUtility(activity: Activity) {
 
                 val request: Request = Request.Builder().url(serverURL).post(requestBody).build()
 
-                val response: Response = client.newCall(request).execute()
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        toggleProgressDialog(false)
+                        Log.e("File upload", "failed")
+                        showToast("File uploading failed")
+                    }
 
-                if (response.isSuccessful) {
-                    Log.d("File upload","success, path: $serverUploadDirectoryPath$fileName")
-                    showToast("File uploaded successfully at $serverUploadDirectoryPath$fileName")
-                } else {
-                    Log.e("File upload", "failed")
-                    showToast("File uploading failed")
-                }
-                response.close()
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        toggleProgressDialog(false)
+                        val jsonData = response.body?.string()
+                        if (response.isSuccessful) {
+                            var json = JSONObject(jsonData)
+                            Log.d(
+                                "File upload",
+                                "success, path: $serverUploadDirectoryPath$fileName"
+                            )
+                            showToast("File uploaded successfully at $serverUploadDirectoryPath$fileName")
+                            callback(json)
+                        } else {
+                            Log.e("File upload", "no object found")
+                            showToast("No object detected")
+                        }
+                    }
+                })
+                // val centered_object = json.get["centered_object"]
             } catch (ex: Exception) {
                 ex.printStackTrace()
                 Log.e("File upload", "failed")
                 showToast("File uploading failed")
             }
-            toggleProgressDialog(false)
         }.start()
     }
 
