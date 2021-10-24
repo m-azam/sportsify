@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices
 import com.mvp.handyopinion.UploadUtility
 import java.io.*
 import android.app.Activity
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
+    private lateinit var gifUrl: String
+    private lateinit var picUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
         collection.setOnClickListener {
             val intent = Intent(this, CollectionActivity::class.java)
+            intent.putExtra("gifUrl", gifUrl)
+            intent.putExtra("picUrl", picUrl)
             startActivity(intent)
         }
 
@@ -70,7 +75,15 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             val videoUri: Uri? = intent?.data
             if (videoUri != null) {
-                getFileFromUri(videoUri)?.let { UploadUtility(this).uploadFile(it) }
+                getFileFromUri(videoUri)?.let {
+                    UploadUtility(this).uploadFile(it) {
+                        gifUrl = it.get("gif_url").toString()
+                        picUrl = it.get("pic_url").toString()
+                        this.runOnUiThread {
+                            Toast.makeText(this, gifUrl, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
             }
         }
     }
@@ -149,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                 if (it.moveToFirst()) {
                     val columnIndex =
                         cursor.getColumnIndexOrThrow(column)
-                    realPath = cursor.getString (columnIndex)
+                    realPath = cursor.getString(columnIndex)
                 }
                 cursor.close()
             }
