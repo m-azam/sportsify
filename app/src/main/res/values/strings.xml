@@ -1,3 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="app_name">sportsify</string>
+    <string name="button" android:layout_width="50pd">Button</string>
 </resources>
