@@ -3,31 +3,20 @@ package com.example.sportsify
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import android.os.Environment
 import android.provider.DocumentsContract
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.net.toFile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mvp.handyopinion.UploadUtility
 import java.io.*
-import java.net.URI
-import java.nio.channels.FileChannel
 import android.app.Activity
-
-
-
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -43,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         verifyStoragePermissions(this)
         launch_camera.setOnClickListener {
             launchCameraActivity()
+        }
+        collection.setOnClickListener {
+            val intent = Intent(this, CollectionActivity::class.java)
+            startActivity(intent)
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -82,20 +75,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveFile(uri: Uri?) {
-        try {
-            val destination: File = File(filesDir.absolutePath + "ab.mp4")
-            val source = File(uri?.getPath())
-            val src: FileChannel = FileInputStream(source).channel
-            val dst: FileChannel = FileOutputStream(destination).channel
-            dst.transferFrom(src, 0, src.size())
-            src.close()
-            dst.close()
-        } catch (io: IOException) {
-            val i = 0;
-        }
-    }
-
     private fun checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -132,11 +111,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkBackgroundLocation() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     private fun requestLocationPermission() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     fun getFileFromUri(uri: Uri): File? {
@@ -190,9 +169,5 @@ class MainActivity : AppCompatActivity() {
         }
         return File(path)
     }
-
-
-
-    //jetpack components
 
 }
