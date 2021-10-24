@@ -15,7 +15,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
 
         val intent = intent
-        if (intent.getIntExtra("position", 0) == 0) {
+        if (intent.getIntExtra("position", -1) == 0) {
             Glide.with(this)
                 .load(intent.getStringExtra("gifUrl"))
                 .signature(ObjectKey(System.currentTimeMillis()))
