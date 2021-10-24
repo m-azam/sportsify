@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-    private lateinit var gifUrl: String
-    private lateinit var picUrl: String
+    private var gifUrl: String? = "http://172.18.192.86:8000/modules/output.gif"
+    private var picUrl: String? = "http://172.18.192.86.37:8000/services/frame0.jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
