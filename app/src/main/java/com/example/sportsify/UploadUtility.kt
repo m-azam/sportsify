@@ -20,8 +20,8 @@ class UploadUtility(activity: Activity) {
 
     var activity = activity;
     var dialog: ProgressDialog? = null
-    var serverURL: String = "http://172.18.192.86:8000/uploadfile"
-    var serverUploadDirectoryPath: String = "http://172.18.192.86:8000/uploadfile"
+    var serverURL: String = "http://10.100.219.14:8000/uploadfile"
+    var serverUploadDirectoryPath: String = "http://10.100.219.14:8000/uploadfile"
     val client : OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(45, TimeUnit.SECONDS)
         .callTimeout(45, TimeUnit.SECONDS)
